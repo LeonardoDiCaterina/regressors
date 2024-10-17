@@ -14,6 +14,11 @@ from __future__ import unicode_literals
 
 import numpy as np
 import pandas as pd
+import sys
+
+if sys.version_info.major == 3 and sys.version_info.minor >= 10:
+    import collections
+    setattr(collections, "MutableMapping", collections.abc.MutableMapping)
 import unittest2 as unittest
 from sklearn import datasets
 from sklearn import decomposition
@@ -23,12 +28,13 @@ from sklearn import preprocessing
 from regressors import regressors
 from regressors import _utils
 from regressors import stats
+from sklearn.datasets import fetch_california_housing
 
-boston = datasets.load_boston()
-which_betas = np.ones(13, dtype=bool)
-which_betas[3] = False  # Eliminate dummy variable
-X = boston.data[:, which_betas]
-y = boston.target
+california = fetch_california_housing()
+
+which_betas =  np.ones(california.data.shape[1], dtype=bool)
+X = california.data[:, which_betas]
+y = california.target
 
 
 class TestStatsResiduals(unittest.TestCase):
